@@ -13,13 +13,15 @@ pub struct WindowSize {
 
 impl WindowSize {
     pub fn new(args: Args) -> Self {
-        let width = match args.width_px {
-            0 => Size::Percent(args.width),
+        let width = match (args.width_px, args.width_pxg) {
+            (0, 0) => Size::Percent(args.width),
+            (0, _) => Size::PixelGaps(args.width_pxg),
             _ => Size::Pixel(args.width_px),
         };
 
-        let height = match args.height_px {
-            0 => Size::Percent(args.height),
+        let height = match (args.height_px, args.height_pxg) {
+            (0, 0) => Size::Percent(args.height),
+            (0, _) => Size::PixelGaps(args.height_pxg),
             _ => Size::Pixel(args.height_px),
         };
 
@@ -46,6 +48,11 @@ impl WindowSize {
                 Self::get_focused_output(client, focused_output);
                 let size = focused_output.clone().unwrap()["rect"][measurement].as_u64().unwrap();
                 size * v / 100
+            },
+            Size::PixelGaps(v) => {
+                Self::get_focused_output(client, focused_output);
+                let size = focused_output.clone().unwrap()["rect"][measurement].as_u64().unwrap();
+                size - v * 2
             },
         }
     }
@@ -78,6 +85,7 @@ impl WindowSize {
 enum Size {
     Percent(u64),
     Pixel(u64),
+    PixelGaps(u64),
 }
 
 

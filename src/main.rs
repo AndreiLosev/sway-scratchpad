@@ -39,6 +39,14 @@ pub struct Args {
    #[arg(long, default_value_t = 0)]
    height_px: u64,
 
+   /// Width of scratchpad in pixels
+   #[arg(long, default_value_t = 0)]
+   width_pxg: u64,
+
+   /// Height of scratchpad in pixels
+   #[arg(long, default_value_t = 0)]
+   height_pxg: u64,
+
    /// Mark the container (executed command) with with this value
    #[arg(short, long)]
    mark: String,
